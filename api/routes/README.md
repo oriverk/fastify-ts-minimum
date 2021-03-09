@@ -24,3 +24,4 @@ functionality into the `plugins` folder, and share it via
 [decorators](https://www.fastify.io/docs/latest/Decorators/).
 mm
 
+fff
