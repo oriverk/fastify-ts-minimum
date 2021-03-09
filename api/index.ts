@@ -1,35 +1,20 @@
-import { join } from 'path';
-import AutoLoad, {AutoloadPluginOptions} from 'fastify-autoload';
-import { FastifyPluginAsync } from 'fastify';
+import * as fastify from "fastify";
 
-export type AppOptions = {
-  // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>;
+interface Query {
+  name?: string;
+}
 
-const app: FastifyPluginAsync<AppOptions> = async (
-    fastify,
-    opts
-): Promise<void> => {
-  // Place here your custom code!
+const app = fastify.fastify({ logger: true });
 
-  // Do not touch the following lines
+app.get<{ Querystring: Query }>("/", async (req, res) => {
+  const { name = "World" } = req.query;
+  req.log.info({ name }, "hello world!");
+  return `Hello ${name}!`;
+});
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
-    options: opts
-  })
-
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'routes'),
-    options: opts
-  })
-
+const handler = async (req: fastify.FastifyRequest, res: fastify.FastifyReply) => {
+  await app.ready();
+  app.server.emit("request", req, res);
 };
 
-export default app;
-export { app }
+export default handler;

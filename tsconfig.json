@@ -1,7 +1,3 @@
 {
-    "extends": "fastify-tsconfig",
-    "compilerOptions": {
-        "outDir": "dist"
-    },
     "include": ["api/**/*.ts"]
 }
